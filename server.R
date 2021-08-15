@@ -83,9 +83,13 @@ server <- function(input, output) {
         standDeviation <- numbers
         StandardDeviation <- sd(standDeviation[[1]])
 
+        MaximunValue<- max(numbers[[1]])
+        MinimunValue<- min(numbers[[1]])
+        
+
         State <- input$state
         
-        df_tb <-  data.frame(State, Media, Median, Mode, StandardDeviation)
+        df_tb <-  data.frame(State, Media, Median, Mode, StandardDeviation, MaximunValue, MinimunValue)
 
         df_tb <- as.data.frame(t(df_tb))
         
