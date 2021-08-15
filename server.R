@@ -4,7 +4,7 @@ server <- function(input, output) {
     ################### INPUT ####################
     select_stock <- eventReactive(input$go, {
         
-        state_name <- input$stock
+        state_name <- input$state
         twin <- input$true_date
         
         df_stock <- master_df %>% 
