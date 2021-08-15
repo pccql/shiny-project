@@ -69,16 +69,18 @@ server <- function(input, output) {
     Info_DataTable <- eventReactive(input$go,{
         df <- select_state()
 
-        mean <- df %>% select(number) %>% colMeans()
+        numbers <- df %>% select(number)
+
+        mean <- numbers %>% colMeans()
         Media <- mean[[1]]
 
-        median <- df %>% select(number)
+        median <- numbers
         Median <- median(median[[1]])
 
         moda<-function(x){which.max(tabulate(x))}
-        Mode <- moda((df %>% select(number))[[1]])
+        Mode <- moda((numbers)[[1]])
 
-        standDeviation <- df %>% select(number)
+        standDeviation <- numbers
         StandardDeviation <- sd(standDeviation[[1]])
 
         State <- input$state
