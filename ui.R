@@ -14,13 +14,13 @@ body <- dashboardBody(
         tabItem(tabName = 'm',
                 fluidRow(
                     box(title = 'Selecione suas opções', width=12, solidHeader = TRUE, status='warning',
-                        selectInput('stock', 'Estado', state_list, multiple=FALSE),
+                        selectInput('state', 'Estado', state_list, multiple=FALSE),
                         uiOutput("timedate"),
                         actionButton('go', 'Submeter')
                         )
                 ),
                 fluidRow(
-                    box(title = "Informações sobre a ação", width = 12, solidHeader = TRUE,
+                    box(title = "Informações sobre o estado", width = 12, solidHeader = TRUE,
                         DTOutput('info')
                     )
                 ),
@@ -33,7 +33,7 @@ body <- dashboardBody(
         tabItem(tabName = 'comp',
                 fluidRow(
                     box(title = 'Selecione suas opções', width=12, solidHeader = TRUE, status='warning',
-                        selectInput('stock_comp', 'Estado', state_list, multiple=TRUE),
+                        selectInput('state', 'Estado', state_list, multiple=TRUE),
                         uiOutput("timedate_comp"),
                         actionButton('go_comp', 'Submeter')
                     )

@@ -2,21 +2,21 @@
 # Define server logic required to draw a histogram
 server <- function(input, output) {
     ################### INPUT ####################
-    select_stock <- eventReactive(input$go, {
+    select_state <- eventReactive(input$go, {
         
-        state_name <- input$stock
-        twin <- input$true_date
+        state_name <- input$state
+        twin <- input$date
         
-        df_stock <- master_df %>% 
+        df_state <- master_df %>% 
             filter(state == state_name) 
         ## FALTA -> FILTRAR O DF POR DATA!!
         
-        return(df_stock)
+        return(df_state)
     })
     
     output$timedate <- renderUI({
         
-        state_name <- input$stock
+        state_name <- input$state
         
         df <- master_df %>% 
             filter(state == state_name)
@@ -35,7 +35,7 @@ server <- function(input, output) {
     
     output$timedate_comp <- renderUI({
         
-        state_name <- input$stock_comp
+        state_name <- input$state
         
         df <- master_df %>% 
             filter(state %in% state_name)
@@ -67,14 +67,15 @@ server <- function(input, output) {
     
     ################ OUTPUT #####################
     Info_DataTable <- eventReactive(input$go,{
-        df <- select_stock()
+        df <- select_state()
         
         mean <- df %>% select(number) %>% colMeans()
+        print(df %>% select(number))
         Media <- mean[[1]]
         
-        Stock <- input$stock
+        State <- input$state
         
-        df_tb <-  data.frame(Stock, Media)
+        df_tb <-  data.frame(State, Media)
         
         df_tb <- as.data.frame(t(df_tb))
         
@@ -98,7 +99,7 @@ server <- function(input, output) {
     
     output$sh <- renderPlot({
         # All the inputs
-        df <- select_stock()
+        df <- select_state()
         
         aux <- df$number %>% na.omit() %>% as.numeric()
         aux1 <- min(aux)
