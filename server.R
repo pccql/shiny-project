@@ -10,7 +10,6 @@ server <- function(input, output) {
         df_state <- master_df %>% filter(state_name == state)
 
         df_state_date <- df_state %>% filter(Date >= twin[1] & Date <= twin[2])
-        print(df_state_date)
         
         return(df_state_date)
     })
