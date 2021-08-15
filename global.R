@@ -7,10 +7,10 @@ library(DT)
 library(tidyverse)
 library(lubridate)
 
-master_df <- read.csv('df_stocks.csv')
-stock_list <- c('AAPL', 'FB', 'GOOG')
+master_df <- read.csv('forestFires.csv')
+state_list <- c('Alagoas', 'Bahia', 'Ceara', 'Maranhao',  'Paraiba','Pernambuco','Piaui' , 'Sergipe')
 
 master_df$X <- NULL
 
 master_df <- master_df %>% drop_na()
-master_df$Date <- strptime(master_df$Date, format='%Y-%m-%d')
+master_df$Date <- strptime(master_df$date, format='%Y-%m-%d')

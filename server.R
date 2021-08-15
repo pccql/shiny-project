@@ -4,11 +4,11 @@ server <- function(input, output) {
     ################### INPUT ####################
     select_stock <- eventReactive(input$go, {
         
-        stock_name <- input$stock
+        state_name <- input$stock
         twin <- input$true_date
         
         df_stock <- master_df %>% 
-            filter(Index == stock_name) 
+            filter(state == state_name) 
         ## FALTA -> FILTRAR O DF POR DATA!!
         
         return(df_stock)
@@ -16,10 +16,10 @@ server <- function(input, output) {
     
     output$timedate <- renderUI({
         
-        stock_name <- input$stock
+        state_name <- input$stock
         
         df <- master_df %>% 
-            filter(Index == stock_name)
+            filter(state == state_name)
         
         min_time <- min(df$Date)
         max_time <- max(df$Date)
@@ -35,19 +35,19 @@ server <- function(input, output) {
     
     output$timedate_comp <- renderUI({
         
-        stock_name <- input$stock_comp
+        state_name <- input$stock_comp
         
         df <- master_df %>% 
-            filter(Index %in% stock_name)
+            filter(state %in% state_name)
         
         maxmin_time <- df %>% 
-            group_by(Index) %>% 
+            group_by(state) %>% 
             summarise(MD = min(Date)) %>% 
             .$MD %>% 
             max()
         
         minmax_time <- df %>% 
-            group_by(Index) %>% 
+            group_by(state) %>% 
             summarise(MD = max(Date)) %>% 
             .$MD %>% 
             min()
@@ -69,7 +69,7 @@ server <- function(input, output) {
     Info_DataTable <- eventReactive(input$go,{
         df <- select_stock()
         
-        mean <- df %>% select(Close) %>% colMeans()
+        mean <- df %>% select(number) %>% colMeans()
         Media <- mean[[1]]
         
         Stock <- input$stock
@@ -100,15 +100,15 @@ server <- function(input, output) {
         # All the inputs
         df <- select_stock()
         
-        aux <- df$Close %>% na.omit() %>% as.numeric()
+        aux <- df$number %>% na.omit() %>% as.numeric()
         aux1 <- min(aux)
         aux2 <- max(aux)
         
         df$Date <- ymd(df$Date)
         a <- df %>% 
-            ggplot(aes(Date, Close, group=1)) +
+            ggplot(aes(Date, number, group=1)) +
             geom_path() +
-            ylab('Preço da Ação em $') +
+            ylab('Número de Ocorrências no estado') +
             coord_cartesian(ylim = c(aux1, aux2)) +
             theme_bw() +
             scale_x_date(date_labels = "%Y-%m-%d")
