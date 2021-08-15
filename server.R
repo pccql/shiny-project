@@ -10,7 +10,7 @@ server <- function(input, output) {
         df_state <- master_df %>% filter(state_name == state)
 
         df_state_date <- df_state %>% filter(Date >= twin[1] & Date <= twin[2])
-        
+    
         return(df_state_date)
     })
     
@@ -68,15 +68,23 @@ server <- function(input, output) {
     ################ OUTPUT #####################
     Info_DataTable <- eventReactive(input$go,{
         df <- select_state()
-        
+
         mean <- df %>% select(number) %>% colMeans()
-        
         Media <- mean[[1]]
-        
+
+        median <- df %>% select(number)
+        Median <- median(median[[1]])
+
+        moda<-function(x){which.max(tabulate(x))}
+        Mode <- moda((df %>% select(number))[[1]])
+
+        standDeviation <- df %>% select(number)
+        StandardDeviation <- sd(standDeviation[[1]])
+
         State <- input$state
         
-        df_tb <-  data.frame(State, Media)
-        
+        df_tb <-  data.frame(State, Media, Median, Mode, StandardDeviation)
+
         df_tb <- as.data.frame(t(df_tb))
         
         # tb  <- as_tibble(cbind(nms = names(df_tb), t(df_tb)))
