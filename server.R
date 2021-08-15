@@ -5,13 +5,14 @@ server <- function(input, output) {
     select_state <- eventReactive(input$go, {
         
         state_name <- input$state
-        twin <- input$date
+        twin <- input$true_date
+
+        df_state <- master_df %>% filter(state_name == state)
+
+        df_state_date <- df_state %>% filter(Date >= twin[1] & Date <= twin[2])
+        print(df_state_date)
         
-        df_state <- master_df %>% 
-            filter(state == state_name) 
-        ## FALTA -> FILTRAR O DF POR DATA!!
-        
-        return(df_state)
+        return(df_state_date)
     })
     
     output$timedate <- renderUI({
@@ -70,7 +71,7 @@ server <- function(input, output) {
         df <- select_state()
         
         mean <- df %>% select(number) %>% colMeans()
-        print(df %>% select(number))
+        
         Media <- mean[[1]]
         
         State <- input$state
