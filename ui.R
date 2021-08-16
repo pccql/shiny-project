@@ -29,6 +29,16 @@ body <- dashboardBody(
                         plotOutput('sh')
                     )
                 ),
+                fluidRow(
+                    box(title = "Histograma dos incêndios", width = 12, solidHeader = TRUE,
+                        plotOutput('histograma')
+                    )
+                ),
+                fluidRow(
+                    box(title = "Boxplot dos incêndios", width = 12, solidHeader = TRUE,
+                        plotOutput('boxplot')
+                    )
+                ),
         ),
         tabItem(tabName = 'comp',
                 fluidRow(
@@ -44,7 +54,7 @@ body <- dashboardBody(
                     )
                 ),   
                 fluidRow(
-                    box(title = "Médias de incêndios nos estados", width = 5, solidHeader = TRUE,
+                    box(title = "Médias de incêndios nos estados", width = 4, solidHeader = TRUE,
                         plotOutput('bar_graph_comp')
                     )
                 ),    

@@ -229,12 +229,8 @@ server <- function(input, output) {
         state_2 <- input$state_comp[2]
         twin <- input$true_date_comp
 
-
-        # df <- master_df[master_df$state == state_1 | master_df$state == state_2,] %>% 
-        # filter(Date >= twin[1] & Date <= twin[2])
         df_1 <- master_df %>% filter(master_df$state == state_1 & Date >= twin[1] & Date <= twin[2])
         df_2 <- master_df %>% filter(master_df$state == state_2 & Date >= twin[1] & Date <= twin[2])
-
 
         Correlacao <- round(cor(df_1$number, df_2$number), digits=4)
 
@@ -244,7 +240,7 @@ server <- function(input, output) {
 
 
         return(df_tb)
-            })
+        })
         
         output$correlation <- renderDT({
         correlation_value() %>%
@@ -255,5 +251,37 @@ server <- function(input, output) {
                 )
             ))
         })
+
+
+   
+
+        draw_histograma <- eventReactive(input$go,{
+
+            df <- select_state()
+
+            a <- ggplot(df, aes(x=number)) +
+                geom_histogram(binwidth=6)+ 
+                xlab("Número de incêndios") +
+                ylab("Frequência")
+            a
+        })
+
+
+        output$histograma <- renderPlot(draw_histograma())
+        
+
+
+        draw_boxplot <- eventReactive(input$go,{
+            df <- select_state()
+
+            a <- ggplot(df, aes(x=state, y=number))+
+             geom_boxplot()+
+                ylab("Número de incêndios")
+            a
+
+        })
+
+
+        output$boxplot <- renderPlot(draw_boxplot())
 
 }
