@@ -168,6 +168,9 @@ server <- function(input, output) {
     
     comp_bar <- eventReactive(input$go_comp,{
 
+        if (length(input$state_comp) != 2){
+            return('Selecione dois estados')
+    }
         state_1 <- input$state_comp[1]
         state_2 <- input$state_comp[2]
         twin <- input$true_date_comp
@@ -182,13 +185,75 @@ server <- function(input, output) {
         
 
         data <- data.frame(
-            name=c(state_1, state_2) ,  
-            value=c(mean_1, mean_2)
+            Estado=c(state_1, state_2) ,  
+            Media=c(mean_1, mean_2)
             )
 
-        ggplot(data, aes(x=name, y=value)) + 
+        ggplot(data, aes(x=Estado, y=Media)) + 
             geom_bar(stat = "identity")
         })
 
         output$bar_graph_comp <- renderPlot(comp_bar())
+
+        draw_scatterplot <- eventReactive(input$go_comp,{
+
+            if (length(input$state_comp) != 2){
+            return('Selecione dois estados')
+    }
+            state_1 <- input$state_comp[1]
+            state_2 <- input$state_comp[2]
+            twin <- input$true_date_comp
+
+            df <- master_df[master_df$state == state_1 | master_df$state == state_2,] %>% 
+            filter(Date >= twin[1] & Date <= twin[2])
+
+            a <- ggplot(data=df, aes(x=state, y=number)) + 
+                geom_point()+
+                xlab("Estado") +
+                ylab("Número de incêndios")
+
+            a
+        })
+
+        output$scatterplot <- renderPlot(draw_scatterplot())
+
+
+
+
+        correlation_value <- eventReactive(input$go_comp,{
+
+            if (length(input$state_comp) != 2){
+        return('Selecione dois estados')
+}
+        state_1 <- input$state_comp[1]
+        state_2 <- input$state_comp[2]
+        twin <- input$true_date_comp
+
+
+        # df <- master_df[master_df$state == state_1 | master_df$state == state_2,] %>% 
+        # filter(Date >= twin[1] & Date <= twin[2])
+        df_1 <- master_df %>% filter(master_df$state == state_1 & Date >= twin[1] & Date <= twin[2])
+        df_2 <- master_df %>% filter(master_df$state == state_2 & Date >= twin[1] & Date <= twin[2])
+
+
+        Correlacao <- round(cor(df_1$number, df_2$number), digits=4)
+
+        df_tb <-  data.frame(Correlacao)
+
+        df_tb <- as.data.frame(t(df_tb))
+
+
+        return(df_tb)
+            })
+        
+        output$correlation <- renderDT({
+        correlation_value() %>%
+            as.data.frame() %>% 
+            DT::datatable(options=list(
+                language=list(
+                    url = '//cdn.datatables.net/plug-ins/1.10.11/i18n/Portuguese-Brasil.json'
+                )
+            ))
+        })
+
 }

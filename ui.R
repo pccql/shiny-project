@@ -47,7 +47,17 @@ body <- dashboardBody(
                     box(title = "Médias de incêndios nos estados", width = 5, solidHeader = TRUE,
                         plotOutput('bar_graph_comp')
                     )
-                ),       
+                ),    
+                fluidRow(
+                    box(title = "Valor de correlação entre os casos de incêndios nos estados", width = 12, solidHeader = TRUE,
+                        DTOutput('correlation')
+                    )
+                ), 
+                fluidRow(
+                    box(title = "Scatterplot", width = 12, solidHeader = TRUE,
+                        plotOutput('scatterplot')
+                    )
+                ),  
         )
     )
 )
