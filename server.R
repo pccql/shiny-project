@@ -10,7 +10,7 @@ server <- function(input, output) {
         df_state <- master_df %>% filter(state_name == state)
 
         df_state_date <- df_state %>% filter(Date >= twin[1] & Date <= twin[2])
-        print(df_state_date)
+        
         return(df_state_date)
     })
     
@@ -123,11 +123,72 @@ server <- function(input, output) {
         a <- df %>% 
             ggplot(aes(Date, number, group=1)) +
             geom_path() +
-            ylab('Número de Ocorrências no estado') +
+            ylab('Número de ocorrências de incêndios no estado') +
             coord_cartesian(ylim = c(aux1, aux2)) +
             theme_bw() +
             scale_x_date(date_labels = "%Y-%m-%d")
         
         a
     })
+
+    comp_line <- eventReactive(input$go_comp, {
+        
+        if (length(input$state_comp) != 2){
+            return('Selecione dois estados')
+    }
+    
+    
+    state_1 <- input$state_comp[1]
+    state_2 <- input$state_comp[2]
+    twin <- input$true_date_comp
+
+    df <- master_df[master_df$state == state_1 | master_df$state == state_2,] %>% 
+      filter(Date >= twin[1] & Date <= twin[2])
+  
+
+    aux <- df$number %>% na.omit() %>% as.numeric()
+        aux1 <- min(aux)
+        aux2 <- max(aux)
+        
+        df$Date <- ymd(df$Date)
+        a <- df %>% 
+            ggplot(aes(Date, number, group=1,colour=state)) +
+            geom_path() +
+            ylab('Número de ocorrências de incêndios nos estados') +
+            coord_cartesian(ylim = c(aux1, aux2)) +
+            theme_bw() +
+            scale_x_date(date_labels = "%Y-%m-%d")
+        
+        a
+    
+    })
+    output$line_graph_comp <- renderPlot(comp_line())
+    
+
+    
+    comp_bar <- eventReactive(input$go_comp,{
+
+        state_1 <- input$state_comp[1]
+        state_2 <- input$state_comp[2]
+        twin <- input$true_date_comp
+
+        df_1 <- master_df %>% filter(master_df$state == state_1 & Date >= twin[1] & Date <= twin[2])
+        df_2 <- master_df %>% filter(master_df$state == state_2 & Date >= twin[1] & Date <= twin[2])
+
+        mean_1 <- df_1 %>% select(number) %>% colMeans()
+        Média_1 <- mean_1[[1]]
+        mean_2 <- df_2 %>% select(number) %>% colMeans()
+        Média_2 <- mean_2[[1]]
+        
+
+        data <- data.frame(
+            name=c(state_1, state_2) ,  
+            value=c(mean_1, mean_2)
+            )
+
+        ggplot(data, aes(x=name, y=value)) + 
+            geom_bar(stat = "identity")
+        })
+
+        output$bar_graph_comp <- renderPlot(comp_bar())
 }
