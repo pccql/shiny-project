@@ -207,9 +207,9 @@ server <- function(input, output) {
             df <- master_df[master_df$state == state_1 | master_df$state == state_2,] %>% 
             filter(Date >= twin[1] & Date <= twin[2])
 
-            a <- ggplot(data=df, aes(x=state, y=number)) + 
-                geom_point()+
-                xlab("Estado") +
+            a <- ggplot(data=df, aes(x=year, y=number, size=2)) + 
+                geom_point(aes(colour=state))+
+                xlab("Ano") +
                 ylab("Número de incêndios")
 
             a
