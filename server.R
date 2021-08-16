@@ -10,7 +10,7 @@ server <- function(input, output) {
         df_state <- master_df %>% filter(state_name == state)
 
         df_state_date <- df_state %>% filter(Date >= twin[1] & Date <= twin[2])
-    
+        print(df_state_date)
         return(df_state_date)
     })
     
@@ -72,24 +72,24 @@ server <- function(input, output) {
         numbers <- df %>% select(number)
 
         mean <- numbers %>% colMeans()
-        Media <- mean[[1]]
+        Média <- mean[[1]]
 
         median <- numbers
-        Median <- median(median[[1]])
+        Mediana <- median(median[[1]])
 
         moda<-function(x){which.max(tabulate(x))}
-        Mode <- moda((numbers)[[1]])
+        Moda <- moda((numbers)[[1]])
 
         standDeviation <- numbers
-        StandardDeviation <- sd(standDeviation[[1]])
+        DesvioPadrão <- sd(standDeviation[[1]])
 
-        MaximunValue<- max(numbers[[1]])
-        MinimunValue<- min(numbers[[1]])
+        ValorMáximo<- max(numbers[[1]])
+        ValorMínimo<- min(numbers[[1]])
         
 
-        State <- input$state
+        Estado <- input$state
         
-        df_tb <-  data.frame(State, Media, Median, Mode, StandardDeviation, MaximunValue, MinimunValue)
+        df_tb <-  data.frame(Estado, Média, Mediana, Moda, DesvioPadrão, ValorMáximo, ValorMínimo)
 
         df_tb <- as.data.frame(t(df_tb))
         
